@@ -1,4 +1,4 @@
-# CS6364 - Artificial Intelligence
+# Artificial Intelligence
 This course covers advanced AI knowledge of Machine Learning, Artificial Neural Networks,
 Convex and Non-Convec Optimization, etc. Syllabus is available [here](https://github.com/quocdat32461997/machine-learning-portfolio/blob/master/ai-course/Syllabus.pdf).
 
