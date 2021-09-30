@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww33400\viewh19380\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf0 \expnd0\expndtw0\kerning0
+==+== Student PC Paper Review Form\
+==-== DO NOT CHANGE LINES THAT START WITH "==+==" UNLESS DIRECTED!\
+\
+==+== =====================================================================\
+==+== Begin Review\
+==+== Reviewer: Dat Quoc Ngo\
+\
+==+== Paper Number\
+\
+(Enter paper number here)\
+\
+==+== Review Readiness\
+==-== Enter "Ready" if the review is ready for others to see:\
+\
+Ready\
+\
+==+== A. Overall merit\
+==-== Choices: 1. Reject\
+==-==          2. Weak reject\
+==-==          3. Weak accept\
+==-==          4. Accept\
+==-==          5. Strong accept\
+==-== Enter the number of your choice:\
+\
+3\
+\
+==+== B. Reviewer expertise\
+==-== Choices: 1. No familiarity\
+==-==          2. Some familiarity\
+==-==          3. Knowledgeable\
+==-==          4. Expert\
+==-== Enter the number of your choice:\
+\
+2\
+\
+==+== C. Paper summary\
+==-== Markdown styling and LaTeX math supported.\
+\
+The authors proposed a physical attack algorithm, Robust Physical Perturbations (RP2) and a two-step evaluation method that generate robust and effective adversarial road sign examples to fool Computer-Vision-centered Deep Learning models for the safety concern. Unlike prior work either slightly modifies physical conditions of images (i.e. distance, angle, lightning) or prints easily-detected perturbations on images, RP2 combines both 2 methods to adversarially generate digital perturbations that are optimized to resemble to original clean images and to fool road sign classifiers. RP2 also optimizes the Non-Printability Score for the color reproduction error that varies depending on sensing hardware. The evaluation was carried at lab and fields tests with varying physical conditions and measured by a proposed metric, so called Success Attach Rate. Based on the proposed metric, RP2 achieved the state-of-the art results in fooling road sign classifiers in various physical conditions. \
+\
+==+== D. Strengths\
+* RP2 is a first of its kind to consider multiple physical conditions (distance, angle, lightning, color error, etc). Hence, RP2 ensures that the generated perturbations are robust in fooling classifiers.\
+* RP2 attempts to adversarially generate perturbations closely similar to artificial ones (e.g. graffiti) that drivers may easily ignore or not suspect them. This approach guarantees that road sign classifiers are fooled by perturbations, not by other physical features.\
+* I like this work since it raises researchers\'92 attention to Safety which is not an active topic in Computer-Vision-related conferences. This is because safety is more an applied-research field and activity pursued by firms rather than academic labs. \
+\
+\
+==+== E. Weaknesses\
+* The authors discussed about how to use L1 and L2 regularizers to find masks which are vulnerable areas in an object for placing perturbations. However, the method of finding masks is not clearly explained with any theory supported. If masks are given in advance, then the given masks may cover both strong and weak areas, not only weak ones. If masks are found by optimizers, the optimizers\'92 details are neither provided nor discussed. Hence, it is difficult to reproduce the work discussed in this paper. Also, why not switching steps of using L1 and L2? It would be more reasonable if the authors perform additional experiments and comparison of using various regularizers in different steps. Generally, this is a critical weakness that I am not fully convinced of finding weak areas as described in the paper.\
+* The metric \'93Success Attack Rate\'94 is inadequate since it measures only the success of fooling classifiers toward targeted classes. In reality, any misclassification may lead to an accident due to unpredicted driving conditions. I believe that there are other useful metrics in this paper\'92s settings. \
+\
+==+== F. Comments for author\
+* RP2 does not cover all possible fabrication errors. Beside the color reproduction error, there is parallel objects in an image. This incident is more common to printing products than road signs. Regardless, the parallel objects in an image may form a new image that is similar to another class. For example, if 2 pedestrian cross signs are placed in parallel and closely, it may form a new sign similar to the \'93men at work\'94 sign.\
+* Two classifiers (LISA-CNN and GTSRB-CNN) are quite simple (only 3 Convolution and 1 FC layers) that not all traffic sign features are captured during training. This paper is stronger if authors evaluated RP2 on more advanced classifiers. \
+* In the dataset section, the authors mention 181 stop sign images are used to test the GTSRB-CNN. It would be better if these 181 images are used to test the LISA-CNN as well.\
+\
+==+== G. Comments for PC (hidden from authors)\
+==-== Markdown styling and LaTeX math supported.\
+\
+==+== End Review\
+}
