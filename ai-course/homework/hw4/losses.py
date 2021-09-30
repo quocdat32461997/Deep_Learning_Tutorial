@@ -3,6 +3,10 @@
 import numpy as np
 
 
+def to_numpy(inputs):
+    if isinstance(inputs, np.array): inputs = np.array(inputs)
+    return inputs
+
 class Losses(object):
     def __init__(self):
         self.gradient = None
@@ -29,18 +33,16 @@ class MSE(Losses):
 
     def gradient(self, model, labels, inputs):
         # make preds
-        preds = model(inputs)
+        preds = model.predict(inputs)
 
         # convert preds and labels to np.array
-        if isinstance(preds, np.array): preds = np.array(preds)
-        if isinstance(labels, np.array): labels = np.array(labels)
+        preds, labels = to_numpy(preds), to_numpy(labels)
 
         return 2 * np.average(preds - labels) * inputs
 
     def __call__(self, preds, labels):
         # convert preds and labels to np.array
-        if isinstance(preds, np.array): preds = np.array(preds)
-        if isinstance(labels, np.array): labels = np.array(labels)
+        preds, labels = to_numpy(preds), to_numpy(labels)
 
         return np.average(np.square(preds - labels))
 
@@ -49,8 +51,27 @@ class CrossEntropy(Losses):
     def __init__(self):
         supeer(CrossEntropy, self).__init__()
 
-    def gradient(self, preds, labels):
+    def gradient(self, model, labels, inputs):
+        # make preds
+        preds = model(inputs)
+
+        # convert preds and labels to np.array
+        preds, labels = to_numpy(preds), to_numpy(labels)
+
+        # gradient of cross-entropy
+
+        # gradient of softmax
+
         return None
 
     def __call__(self, preds, labels):
-        return 0
+        # Args:
+        #   - preds: np.array
+        #       Prediction matrix of shape [batch, n_class]
+        #   - labels: np.array
+        #       One-hot encoding label matrix of shape [batch, n_class]
+
+        # convert preds and labels to np.array
+        preds, labels = to_numpy(preds), to_numpy(labels)
+
+        return -1 * np.sum(np.log(preds) * preds)

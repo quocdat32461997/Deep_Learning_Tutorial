@@ -39,17 +39,17 @@ class SGD(Optimizers):
 
         # if nesterov momentum, append prev-step gradients to model weights
         if self.nesterov:
-            self.model.weights += self.gradients
+            self.model.coef_ += self.gradients
 
         # compute gradients at current step
         self.gradients -= self.learning_rate * self.loss_fn.gradient(self.model, labels, inputs)
 
         # update weights
-        self.model.weights += self.gradients
+        self.model.coef_ += self.gradients
 
     def backward(self, labels, inputs):
         # compute loss
-        self.loss = self.loss_fn(self.model(inputs), labels)
+        self.loss = self.loss_fn(self.model.predict(inputs), labels)
 
         # compute gradients
         self.compute_gradient(preds, labels, inputs)
