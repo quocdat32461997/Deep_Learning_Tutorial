@@ -42,7 +42,7 @@ class SGD(Optimizers):
             self.model.weights += self.gradients
 
         # compute gradients at current step
-        self.gradients = self.learning_rate * self.loss_fn.gradient(self.model, labels, inputs)
+        self.gradients -= self.learning_rate * self.loss_fn.gradient(self.model, labels, inputs)
 
         # update weights
         self.model.weights += self.gradients
