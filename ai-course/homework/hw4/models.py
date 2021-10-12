@@ -1,42 +1,28 @@
-# schedulers.py
-
+# model.py
 import numpy as np
 
 
-class Scheduler(object):
-    def __init__(self, learning_rate):
-        self.initial_learning_rate = learning_rate
-        pass
+class LogisticRegressor:
+    def __init__(self):
+        self.coef_ = None
+        self.intercept_ = None
 
-    def get_lr(self, **kwargs):
-        return self.initial_learning_rate
+    def sigmoid(self, inputs):
+        return 1 / (1 + np.exp(-inputs))
 
+    def fit(self, inputs, labels):
+        # initializes weights and bias
+        self.coef_ = np.zeros(shape=(1, inputs.shape[-1]))
+        self.intercept_ = np.zeros(shape=(1))
 
-class AdaGradScheduler(Scheduler):
-    def __init__(self, learning_rate):
-        super(AdaGrad, self).__init__(learning_rate=learning_rate)
-        self.r = 1e-8
-        self.accumulated_gradients = {'weight': 0, 'bias': 0}
-        pass
+    def predict(self, inputs):
+        # linear output
+        outputs = np.dot(inputs, self.coef_.T) + self.intercept_
 
-    def update_lr(self, gradients, **kwargs):
-        # square and accumulate gradients
-        for k, v in gradients.items():
-            self.accumulated_gradients[k] += np.square(v)
+        # sigmoid
+        return self.sigmoid(outputs)[..., -1]
 
-        return {k: self.initial_learning_rate / np.sqrt(v + self.r) for k, v in self.accumulated_gradients.items()}
-
-    def get_lr(self, gradients, **kwargs):
-        return self.update_lr(gradients)
-
-
-class AdamScheduler(Scheduler):
-    def __init__(self, learning_rate):
-        super(AdamScheduler, self).__init__(learning_rate=learning_rate)
-        self.r = 1e-8
-
-    def udpate_lr(self, gradients, **kwargs):
-        return None
-
-    def get_lr(self, gradients, **kwargs):
-        return None
+    def binary_predict(self, inputs):
+        binary_fn = lambda x: 1 if x > 0.5 else 0
+        preds = self.predict(inputs)
+        return np.array([binary_fn(x) for x in preds])
