@@ -1,0 +1,66 @@
+==+== Student PC Paper Review Form
+==-== DO NOT CHANGE LINES THAT START WITH "==+==" UNLESS DIRECTED!
+
+==+== =====================================================================
+==+== Begin Review
+==+== Reviewer: 
+
+==+== Paper Number
+
+(Enter paper number here)
+
+==+== Review Readiness
+==-== Enter "Ready" if the review is ready for others to see:
+
+Ready
+
+==+== A. Overall merit
+==-== Choices: 1. Reject
+==-==          2. Weak reject
+==-==          3. Weak accept
+==-==          4. Accept
+==-==          5. Strong accept
+==-== Enter the number of your choice:
+
+Accept
+
+==+== B. Reviewer expertise
+==-== Choices: 1. No familiarity
+==-==          2. Some familiarity
+==-==          3. Knowledgeable
+==-==          4. Expert
+==-== Enter the number of your choice:
+
+Some familiarity
+
+==+== C. Paper summary
+==-== Markdown styling and LaTeX math supported.
+
+Authors proposed SpamTracker, a two-stage approach that clusters spamming IP addresses based on their sending behaviors to target domains and select the 
+most similar cluster in terms of the sending patterns. The clustering stage utilizes the standard spectral clustering and yields a set of C clusters that each cluster is a set of IP addresses
+which share the similar sending patterns. SpamTracker could easily incorporated with existing systems through XML interfaces. However, SpamTracker faces challenges in stability since it requires a large of
+amount of data (spam emails and senders) to solve 2 main problems of any spam detectors: incompleteness and responsiveness.
+
+==+== D. Strengths
+==-==    What are the paper’s strengths? Just a couple sentences, please.
+==-== Markdown styling and LaTeX math supported.
+
+* I like the approach of using spectral clustering to discover sending patterns and cluster ip-address together. This method is scalable in solving the dynamicism of spamming IP addresses without manual or multi-end-user verification. 
+* The selection of clustering algorithm is a good choice in solving the responsiveness of spam detectors. It solves both the incompleteness and responsiveness issues of spam detectors.
+* The description of the algorithm is so detailed that I believe that the algorithm is reproducible. The reproduciability is important, especially in applied science fields like seucrity.
+
+==+== E. Weaknesses
+==-==    What are the paper’s weaknesses? Just a couple sentences, please.
+==-== Markdown styling and LaTeX math supported.
+* There is no comparison between spectral clustering and other algorithms. In other words, I am not convinced of choosing spectral clustering for clustering sending patterns. It would be better to perform multiple clustering algorithms on same datasets for this task.
+* There is a lack of explanation and details of the reclustering method that I may have difficulties in reproducing it. 
+
+==+== F. Comments for author
+==-== Markdown styling and LaTeX math supported.
+* Perhaps, Section 4.1, 4.2, and 4.3 seem to repeat the content coverred in Section 3.2. It is better to combine Section 3 into Section 4.
+
+==+== G. Comments for PC (hidden from authors)
+==-== Markdown styling and LaTeX math supported.
+
+==+== End Review
+
