@@ -1,0 +1,3 @@
+[submodule "ai-course/homework/hw5/ai-course/homework/hw5/fashion-mnist"]
+	path = ai-course/homework/hw5/ai-course/homework/hw5/fashion-mnist
+	url = https://github.com/zalandoresearch/fashion-mnist
