@@ -14,40 +14,38 @@ class Env:
     CLIFF = 4
 
     # rewards for each status
-    PEN_REWARDS = -100  # either cliff or out-of-edge
     REWARDS = -5  # normal status
-    GOAL_REWARDS = 100
 
     def __init__(self):
         self.states = torch.ones([6, 10])
         self.states[-1, -1] = Env.GOAL  # goal
-        self.stats[-1, 2:10] = Env.CLIFF  # red cliff
+        self.states[-1, 2:10] = Env.CLIFF  # red cliff
 
         # initial state at [0,0]
-        self.current_state = torch.tensor([0, 0])
+        self.current_state = torch.tensor([5, 0])
 
     def reset(self):
-        self.current_state = torch.tensor([0, 0])
+        self.current_state = torch.tensor([5, 0])
         return self.current_state
 
     def step(self, action):
         action = Env.ACTIONS[action]
         done = False
-        rewards = Env.REWARDS
 
         # get next_state state given action
         next_state = self.current_state + action
+        #print(self.current_state, next_state, self.states.size())
 
         # if next_state crosses border, do not update current state and return rewards -100
-        if 0 <= next__state[0] < self.states.size()[0] and 0 <= nedt_state[-1] < self.states.size()[-1]:
-            return self.current_state, Env.PEN_REWARDS, done
+        if next_state[0] < 0 or next_state[0] >= self.states.size()[0] or next_state[-1] \
+                < 0 or next_state[-1] >= self.states.size()[-1]:
+            return self.current_state, Env.REWARDS, done
 
         # with-in grid
-        if self.states[next_state[0], next_state[-1]] == Env.GOAL: # final state
+        if self.states[next_state[0], next_state[-1]] in [Env.GOAL, Env.CLIFF]: # final state
             done = True
-            rewards = Env.GOAL_REWARDS
-        elif self.states[next_state[0], next_state[-1]] == Env.CLIFF: # cliff state
-            done = True
-            rewards = Env.PEN_REWARDS
 
-        return next_state, rewards, done
+        # update current state
+        self.current_state = next_state
+
+        return next_state, Env.REWARDS, done

@@ -4,12 +4,15 @@ from models import *
 from env import *
 
 discount_factor = 0.7
-lr =
+lr = 0.01
+num_episode, num_step = 1000, 1000
 
-def to_device(inputs)
-    if torch.cuda.is_availablle()
+
+def to_device(inputs):
+    if torch.cuda.is_availablle():
         inputs = inputsa.to('cuda')
     return inputs
+
 
 def reinforce():
     # initialize env
@@ -19,10 +22,7 @@ def reinforce():
     model = Reinforce(num_inputs=2,
                       nun_actions=4,
                       hidden_size=64)
-    optimizer = torch.optim.Adam(model.parameters(),
-                                 lr=lr)
-    num_episode = 1000
-    num_step = 1000
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     # training
     for episode in range(num_episode):
@@ -34,10 +34,10 @@ def reinforce():
         # take step
         for t in range(num_step):
             # predict action probs
-            action, action_prob = model(state)
-
+            action, action_prob = model.get_action(state)
             state, reward, done = env.step(action)
 
+            # update rewards
             rewards.append(reward)
             total_reward += reward
             log_probs.append(action_prob)
@@ -50,24 +50,79 @@ def reinforce():
         for i, r in enumerate(rewards[::-1]):
             R = r + discount_factor * R
             loss.insert(0, R)
-        loss = torch.tensor(loss)
-        loss *= -1 * torch.tensor(log_probs)
-        loss = loss.sum()
+        for i, log_prob, R in zip(range(len(loss)), log_probs, loss):
+            loss[i] = -log_prob * R
 
         # backprop
         optimizer.zero_grad()
+        loss = torch.tensor(loss, requires_grad=True).sum()
         loss.backward()
         optimizer.step()
-
 
         # display result
         if episode % 5 == 0:
             print('Episode {}\tLast reward: {:.2f}\t'.format(
-                episode, total_reward,))
+                episode, total_reward))
+
+
+def actor_critic():
+    # initialize env
+    env = Env()
+
+    # initialize model
+    model = ActorCritic(num_inputs=2,
+                      nun_actions=4,
+                      hidden_size=64)
+    optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+
+    # training
+    for episode in range(num_episode):
+        # initial state
+        state = env.reset()
+        rewards, log_probs, state_values, total_reward = [], [], [], 0
+
+        # take step
+        for t in range(num_step):
+            # take action
+            action, action_prob, state_value = model.get_action(state)
+
+            # get next_state and reward
+            state, reward, done = env.step(action)
+
+            # update rewards
+            rewards.append(reward)
+            total_reward += reward
+            log_probs.append(action_prob)
+            state_values.append(state_value)
+
+            if done:
+                break
+
+        # compute loss
+        R, policy_loss, value_loss = 0, [], []
+        for i, r in enumerate(rewards[::-1]):
+            R = r + discount_factor * R
+            policy_loss.insert(0, R)
+        for i, log_prob, value, R in zip(range(len(policy_loss)), log_probs, state_values, policy_loss):
+            # calculate actor (policy) loss
+            policy_loss[i] = -log_prob * R
+
+            # calculate critic (value) loss using MSELoss
+            value_loss.append(torch.nn.MSELoss()(value, torch.tensor([R])))
+
+        # backprop
+        optimizer.zero_grad()
+        loss = torch.tensor(policy_loss, requires_grad=True).sum() + torch.tensor(value_loss, requires_grad=True).sum()
+        loss.backward()
+        optimizer.step()
+
+        # display result
+        if episode % 5 == 0:
+            print('Episode {}\tLast reward: {:.2f}\tLoss: {:.2f}'.format(episode, total_reward, loss))
     pass
 
+
 if __name__ == '__main__':
-    reinforce()
+    #reinforce()
 
     actor_critic()
-
