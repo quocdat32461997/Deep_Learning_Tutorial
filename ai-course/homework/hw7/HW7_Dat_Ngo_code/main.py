@@ -7,7 +7,7 @@ discount_factor = 0.7
 lr = 0.01
 num_episode, num_step = 1000, 1000
 
-torch.manual_seed(1000)
+torch.manual_seed(100)
 
 def to_device(inputs):
     if torch.cuda.is_availablle():
@@ -18,6 +18,7 @@ def to_device(inputs):
 def reinforce():
     # initialize env
     env = Env()
+    print(env.policy_table)
 
     # initialize model
     model = Reinforce(num_inputs=2,
@@ -48,11 +49,11 @@ def reinforce():
 
         # compute loss
         R, loss, returns = 0, [], []
-        for i, r in enumerate(rewards[::-1]):
+        for i, r in enumerate(model.rewards[::-1]):
             R = r + discount_factor * R
             returns.insert(0, R)
         returns = torch.tensor(returns)
-        for log_prob, R in zip(log_probs, returns):
+        for log_prob, R in zip(model.log_probs, returns):
             loss.append(-log_prob * R)
 
         # backprop
@@ -63,16 +64,36 @@ def reinforce():
 
         # display result
         if episode % 5 == 0:
-            print('Episode {}\tLast reward: {:.2f}\t'.format(
-                episode, total_reward))
+            if episode % 5 == 0:
+                print('Episode {}\tLast reward: {:.2f}\tLoss: {:.2f}\tSteps: {}'.
+                      format(episode, total_reward, loss, t))
 
         del model.rewards[:]
         del model.log_probs[:]
+
+    # evaluate
+    model.eval()
+    state = env.reset()
+    for t in range(num_step):
+        # take action
+        action_prob = model(state.float())
+        action = torch.argmax(action_prob).item()
+
+        # update policy table
+        env.policy_table[state[0], state[-1]] = action
+
+        # get next_state and reward
+        state, reward, done = env.step(action)
+
+        if done:
+            break
+    print(env.policy_table)
 
 
 def actor_critic():
     # initialize env
     env = Env()
+    print(env.policy_table)
 
     # initialize model
     model = ActorCritic(num_inputs=2,
@@ -125,15 +146,33 @@ def actor_critic():
         optimizer.step()
 
         # display result
-        #if episode % 5 == 0:
-        print('Episode {}\tLast reward: {:.2f}\tLoss: {:.2f}\tSteps: {}'.format(episode, total_reward, loss, t))
+        if episode % 5 == 0:
+            print('Episode {}\tLast reward: {:.2f}\tLoss: {:.2f}\tSteps: {}'.
+                  format(episode, total_reward, loss, t))
 
         del model.rewards[:]
         del model.log_probs[:]
-    pass
+
+    # evaluate
+    model.eval()
+    state = env.reset()
+    for t in range(num_step):
+        # take action
+        action_prob, state_value = model(state.float())
+        action = torch.argmax(action_prob).item()
+
+        # update policy table
+        env.policy_table[state[0], state[-1]] = action
+
+        # get next_state and reward
+        state, reward, done = env.step(action)
+
+        if done:
+            break
+    print(env.policy_table)
 
 
 if __name__ == '__main__':
-    #reinforce()
+    reinforce()
 
-    actor_critic()
+    #actor_critic()
